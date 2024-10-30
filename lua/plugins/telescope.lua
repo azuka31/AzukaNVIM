@@ -16,6 +16,8 @@ return {
           "!*.csv", -- Exclude CSV files
           "--glob",
           "!*.txt", -- Exclude TXT files
+          "--glob",
+          "!*.ipynb", -- Exclude IPYNB files
         },
       },
       pickers = {

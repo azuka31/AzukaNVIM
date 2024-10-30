@@ -39,3 +39,11 @@ keymap.set("n", "<leader>fh", "<cmd>Telescope help_tags<cr>") -- increment
 keymap.set("n", "<C-j>", function()
   vim.diagnostic.goto_next()
 end)
+
+vim.g.tmux_navigator_no_mappings = 1
+
+-- Custom keybindings for tmux navigation
+vim.api.nvim_set_keymap("n", "<C-h>", ":TmuxNavigateLeft<CR>", { silent = true })
+vim.api.nvim_set_keymap("n", "<C-j>", ":TmuxNavigateDown<CR>", { silent = true })
+vim.api.nvim_set_keymap("n", "<C-k>", ":TmuxNavigateUp<CR>", { silent = true })
+vim.api.nvim_set_keymap("n", "<C-l>", ":TmuxNavigateRight<CR>", { silent = true })

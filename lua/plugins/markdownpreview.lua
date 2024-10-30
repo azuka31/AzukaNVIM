@@ -14,6 +14,11 @@ return {
       vim.g.mkdp_open_to_the_world = 0
       vim.g.mkdp_echo_preview_url = 1
       vim.g.mkdp_filetypes = { "markdown" }
+      vim.g.mkdp_preview_options = {
+        hide_yaml_meta = 1,
+        disable_filename = 0,
+        syntax = "on",
+      }
     end,
     ft = { "markdown" }, -- Load only for markdown files
   },
