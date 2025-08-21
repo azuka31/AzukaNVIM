@@ -1,0 +1,218 @@
+{
+  "template": {
+    "body": [
+      "select *",
+      "from",
+      "(",
+      ") a",
+      "left join",
+      "(",
+      ") b",
+      "on a.msisdn = b.msisdn",
+      "left join",
+      "(",
+      ") c",
+      "on a.msisdn = c.msisdn",
+      "left join",
+      "(",
+      ") d",
+      "on a.msisdn = d.msisdn",
+      "left join",
+      "(",
+      ") e",
+      "on a.msisdn = e.msisdn",
+      "left join",
+      "(",
+      ") f",
+      "on a.msisdn = f.msisdn",
+      "left join",
+      "(",
+      ") g",
+      "on a.msisdn = g.msisdn",
+      ";",
+      ""
+    ],
+    "prefix": "q_template",
+    "description": "Structure"
+  },
+  "catalog": {
+    "body": [
+      "select *",
+      "from",
+      "(",
+      "select *, row_number() over(partition by sku order by time_stamp desc) rn",
+      "from smy.product_catalog_ifrs_c2c_dd",
+      "where event_date = '2025-08-09'",
+      ") a",
+      "where rn = 1",
+      ""
+    ],
+    "prefix": "q_catalog",
+    "description": "Structure Catalog"
+  },
+  "q_nonrclss": {
+    "body": [
+      "select msisdn,",
+      "sum(case when lower(divisi) = 'vas content' then coalesce(clm_revenue,0) else 0 end) rev_non_reclass_vas,",
+      "sum(case when lower(divisi) = 'vas content' then coalesce(tot_trx,0) else 0 end) trx_non_reclass_vas,",
+      "sum(case when lower(divisi) <> 'vas content' then coalesce(clm_revenue,0) else 0 end) rev_non_reclass_non_vas,",
+      "sum(case when lower(divisi) <> 'vas content' then coalesce(tot_trx,0) else 0 end) trx_non_reclass_non_vas,",
+      "sum(case when lower(divisi) <> 'vas content' and lower(service) not in ('mkios gigamax charge 1', 'videomax addon charge 1') then coalesce(clm_revenue,0) else 0 end) rev_non_reclass_non_vas_non_chg_1,",
+      "sum(case when lower(divisi) <> 'vas content' and lower(service) not in ('mkios gigamax charge 1', 'videomax addon charge 1') then coalesce(tot_trx,0) else 0 end) trx_non_reclass_non_vas_non_chg_1,",
+      "sum(case when lower(divisi) <> 'vas content' and lower(service) not in ('game mku', 'ifj', 'movitek_games', 'waki', 'yatta_games', 'kreatifbersama', 'dotpg', 'telesat', 'ninelives game', 'linkit_games', 'wsi', 'macrokiosk', 'kgt', 'amp') then coalesce(clm_revenue,0) else 0 end) rev_non_reclass_non_vas_non_outlier,",
+      "sum(case when lower(divisi) <> 'vas content' and lower(service) not in ('game mku', 'ifj', 'movitek_games', 'waki', 'yatta_games', 'kreatifbersama', 'dotpg', 'telesat', 'ninelives game', 'linkit_games', 'wsi', 'macrokiosk', 'kgt', 'amp') then coalesce(tot_trx,0) else 0 end) trx_non_reclass_non_vas_non_outlier,",
+      "sum(case when lower(divisi) = 'digital music' then coalesce(clm_revenue,0) else 0 end) rev_non_reclass_digital_music,",
+      "sum(case when lower(divisi) = 'digital music' then coalesce(tot_trx,0) else 0 end) trx_non_reclass_digital_music,",
+      "sum(case when lower(divisi) = 'video' then coalesce(clm_revenue,0) else 0 end) rev_non_reclass_video,",
+      "sum(case when lower(divisi) = 'video' then coalesce(tot_trx,0) else 0 end) trx_non_reclass_video,",
+      "sum(case when lower(divisi) = 'games marketplace' then coalesce(clm_revenue,0) else 0 end) rev_non_reclass_games,",
+      "sum(case when lower(divisi) = 'games marketplace' then coalesce(tot_trx,0) else 0 end) trx_non_reclass_games,",
+      "sum(coalesce(clm_revenue,0)) rev_non_reclass,",
+      "sum(coalesce(tot_trx,0)) trx_non_reclass",
+      "from rna_arc.dd_nonrclss_dls_bkp",
+      "where event_date between '2025-07-01' and '2025-07-31'",
+      "and coalesce(clm_revenue,0) > 1",
+      "group by 1"
+    ],
+    "prefix": "q_nonrclss",
+    "description": "Structure Non Reclass"
+  },
+  "cb": {
+    "body": [
+      "select msisdn, los,",
+      "case when lower(brand) = 'kartuhalo' then coalesce(tot_bill_amount, 0) else coalesce(total_revenue, 0) end rev_all,",
+      "case when lower(brand) = 'kartuhalo' then 'postpaid' else 'prepaid' end brand",
+      "from dm.cb_pre_post_mm",
+      "where event_date = '2024-12-01'"
+    ],
+    "prefix": "q_cb",
+    "description": "Structure"
+  },
+  "spam": {
+    "body": [
+      "spam",
+      "spam"
+    ],
+    "prefix": "f_spam",
+    "description": "Structure"
+  },
+  "roaming_summary": {
+    "body": [
+      "select",
+      "msisdn,",
+      "sum(case when calldate between '2024-12-01' and last_day('2024-12-01') and lower(chargetype) = 'package' then totcharge_tax else 0 end) rev_ir_package,",
+      "sum(case when calldate between '2024-12-01' and last_day('2024-12-01') and lower(chargetype) = 'payu' then totcharge_tax else 0 end) rev_ir_payu,",
+      "sum(case when calldate between '2024-12-01' and last_day('2024-12-01') then totcharge_tax else 0 end) rev_ir,",
+      "sum(case when calldate between '2024-11-01' and last_day('2024-11-01') and lower(chargetype) = 'package' then totcharge_tax else 0 end) rev_ir_package_m1,",
+      "sum(case when calldate between '2024-11-01' and last_day('2024-11-01') and lower(chargetype) = 'payu' then totcharge_tax else 0 end) rev_ir_payu_m1,",
+      "sum(case when calldate between '2024-11-01' and last_day('2024-11-01') then totcharge_tax else 0 end) rev_ir_m1",
+      "from mkt_so.ws_roaming_summary_dd",
+      "where calldate between '2024-11-01' and last_day('2024-12-01') -- MTD current month",
+      "group by 1"
+    ],
+    "prefix": "q_roaming_summary",
+    "description": "Structure"
+  },
+  "resident": {
+    "body": [
+      "select msisdn, max(1) bin_resident",
+      "from",
+      "(",
+      "select",
+      "msisdn,",
+      "sum(case when period = '202412' then 1 else 0 end) m1,",
+      "sum(case when period = '202411' then 1 else 0 end) m2,",
+      "sum(case when period = '202410' then 1 else 0 end) m3",
+      "from mkt_so.ws_roaming_resident_mm",
+      "where period in ('202410', '202411', '202412')",
+      "group by 1",
+      ") a",
+      "where m1+m2+m3 = 3",
+      "group by 1"
+    ],
+    "prefix": "q_resident",
+    "description": "Structure"
+  },
+  "bcp": {
+    "body": [
+      "select",
+      "event_date period,",
+      "appscategory,",
+      "apps,",
+      "brand,",
+      "count(distinct msisdn) subs,",
+      "sum(coalesce(payload_bcp_bytes_extrapolated,0)) payload_bcp_bytes_extrapolated",
+      "from mig.bcp_extrapolated_mm",
+      "where event_date between '20250101' and '20250601'",
+      "group by 1, 2, 3, 4",
+      ";",
+      ""
+    ],
+    "prefix": "q_bcp",
+    "description": "Structure"
+  },
+  "bba": {
+    "body": [
+      "select msisdn,",
+      "sum(case when lower(package_subgroup) like '%super seru%' and validity between 28 and 33 then coalesce(revenue,0) end) rev_data_pack_super_seru,",
+      "sum(case when lower(package_subgroup) like '%super seru%' and validity between 28 and 33 then coalesce(trx,0) end) trx_data_pack_super_seru,",
+      "sum(revenue) rev_data_pack,",
+      "sum(trx) trx_data_pack",
+      "from mkt_bb.bba_broadband_daily",
+      "where trx_date between '2025-07-01' and '2025-07-31'",
+      "group by 1",
+      ""
+    ],
+    "prefix": "q_bba",
+    "description": "Structure"
+  },
+  "tsel": {
+    "body": [
+      "select",
+      "msisdn,",
+      "sum(case when trx_date between '2024-12-01' and last_day('2024-12-01') then 1 else 0 end) total_locup,",
+      "sum(case when trx_date between '2024-11-01' and last_day('2024-11-01') then 1 else 0 end) total_locup_m1,",
+      "count(distinct case when trx_date between '2024-12-01' and last_day('2024-12-01') then trx_date end) count_date_locup,",
+      "count(distinct case when trx_date between '2024-11-01' and last_day('2024-11-01') then trx_date end) count_date_locup_m1,",
+      "max(case when trx_date between '2024-12-01' and last_day('2024-12-01') and lower(trim(country)) in ('cambodia','philippines','thailand','vietnam') then 1 else 0 end) bin_remove",
+      "from mkt_so.ws_roaming_country_dd",
+      "where trx_date between '2024-11-01' and last_day('2024-12-01')",
+      "and lower(data_source) = 'locup'",
+      "group by 1"
+    ],
+    "prefix": "q_locup",
+    "description": "Structure"
+  },
+  "nrclss": {
+    "body": [
+      "select msisdn,",
+      "sum(coalesce(tot_trx,0)) trx,",
+      "sum(coalesce(clm_revenue,0)) clm_revenue",
+      "from rna_arc.dd_nonrclss_dls_bkp",
+      "where event_date between '2025-07-01' and '2025-07-31'",
+      "and coalesce(clm_revenue,0) > 1",
+      "group by 1",
+      ""
+    ],
+    "prefix": "q_nrclss",
+    "description": "Structure Non Reclass"
+  },
+  "ir_reff": {
+    "body": [
+      "select group_pack_1, group_pack_2, `grouping`",
+      "from",
+      "(",
+      "select group_pack_1, group_pack_2, `grouping`, row_number() over(partition by `grouping` order by kadal desc) rn",
+      "from",
+      "(",
+      "select group_pack_1, group_pack_2, `grouping`, count(*) kadal",
+      "from mkt_post.ir_prod_ref",
+      "group by 1,2,3",
+      ") a",
+      ") a",
+      "where rn = 1"
+    ],
+    "prefix": "q_ir_reff",
+    "description": "Structure"
+  }
+}

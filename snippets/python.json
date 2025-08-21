@@ -1,0 +1,9 @@
+{
+  "Print Hello": {
+    "prefix": "hello",
+    "body": [
+      "print(\"Hello, world!\")"
+    ],
+    "description": "Minimal sanity-check snippet"
+  }
+}

@@ -37,7 +37,7 @@ keymap.set("n", "<leader>fh", "<cmd>Telescope help_tags<cr>") -- increment
 
 -- Diagnostic
 keymap.set("n", "<C-j>", function()
-  vim.diagnostic.goto_next()
+    vim.diagnostic.goto_next()
 end)
 
 vim.g.tmux_navigator_no_mappings = 1
